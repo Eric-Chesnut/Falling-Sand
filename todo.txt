@@ -1,0 +1,5 @@
+to do list
+make initial python file i guess, then study the examples and make a simple falling sand of your own
+
+by that i mean literally just sand, falling, onto a white background, piling up, no clicking, no input, just sand falling 
+from the top of the screen, piling on the bottom of the screen
