@@ -24,6 +24,9 @@ def getBoard(x, y):
 # it will then either check position (1,0), which it will also find full, or/after checking (1,0), it will
 # attempt to check position (-1,0), this doesn't exist in the array and will cause a crash, same should happen on the right side
 # objects at (500, x) don't move at double speed, still causes a crash, tries to access (501, 0)
+# doesn't crash anymore.... why? it does pile up on the other side of the screen though, i get why this is happening
+# at (0, y) it checks (1, y-1) and (-1, y-1), (-1, y-1) happens to be the same as (500, y-1-1), so it can move to that space
+# works the other way too, (500, y), (499, y-1), (501, y-1) = (0, y)
 def runSimulation():
     direction = 1
     swaps = 0
