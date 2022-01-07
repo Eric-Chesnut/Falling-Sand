@@ -18,11 +18,17 @@ def getBoard(x, y):
     return board[x + y*width]
 
 # makes sand fall
+# currently water (2) can move right until it hits something, but just one square left
+# things on the far left, so x = 0, move twice as fast as other objects, and it will cause a crash
+# if an thing is at (0,0) and (1,0), if an object is at (0,1) it will check position (0,0), find it's full,
+# it will then either check position (1,0), which it will also find full, or/after checking (1,0), it will
+# attempt to check position (-1,0), this doesn't exist in the array and will cause a crash, same should happen on the right side
+# objects at (500, x) don't move at double speed, still causes a crash, tries to access (501, 0)
 def runSimulation():
     direction = 1
     swaps = 0
     for y in range(height-1,-1,-1):
-        for x in range(0,width+1):
+        for x in range(0,width):
             if getBoard(x,y) == 1: # if it's sand
                 if getBoard(x,y+1) == 0 or getBoard(x,y+1) == 2: # if spot below sand is empty or has watter
                     setBoard(x,y,getBoard(x,y+1))
