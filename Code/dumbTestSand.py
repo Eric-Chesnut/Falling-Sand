@@ -48,11 +48,12 @@ def setBoarder():
 # the right bias would still exist
 # one problem at a time, fix the teleporting objects
 # border fixes the piling on the other side of the screen issue
+# water will pool on the left, it's because the algorithm goes from left to right, it's hard for a group of water to move right, easy to move left
 def runSimulation():
     direction = 1
     swaps = 0
-    for y in range(height-1,-1,-1):
-        for x in range(0,width):
+    for y in range(height-2,1,-1):
+        for x in range(2,width-2):
             if getBoard(x,y) == 1: # if it's sand
                 if getBoard(x,y+1) == 0 or getBoard(x,y+1) == 2: # if spot below sand is empty or has watter
                     setBoard(x,y,getBoard(x,y+1))
@@ -120,12 +121,12 @@ def drawBoard():
     screen.fill((255, 255, 255)) # Fill the screen with white
     for y in range(0,height+1):
         for x in range(0,width+1):
-            if getBoard(x,y) == 1:
-                pygame.draw.rect(screen, (0, 0, 0), (x, y, 1, 1)) # color, (x position, y position, width, height) rectangle specs
-            elif getBoard(x,y) == 2:
+            if getBoard(x,y) == 1: #sand
+                pygame.draw.rect(screen, (194, 178, 128), (x, y, 1, 1)) # color, (x position, y position, width, height) rectangle specs
+            elif getBoard(x,y) == 2: #water
                 pygame.draw.rect(screen, (0, 0, 255), (x, y, 1, 1))
-            elif getBoard(x,y) == -1:
-                pygame.draw.rect(screen, (0, 255, 255), (x, y, 1, 1))
+            elif getBoard(x,y) == -1: #border
+                pygame.draw.rect(screen, (0, 0, 0), (x, y, 1, 1))
     # Flip the display
     pygame.display.flip()
 
