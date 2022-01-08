@@ -17,6 +17,22 @@ def setBoard(x, y, val):
 def getBoard(x, y):
     return board[x + y*width]
 
+# creates a ring of -1 around the array
+def setBoarder():
+    for y in range(height-1,-1,-1):
+        setBoard(0, y, -1)
+        setBoard(1, y, -1)
+        setBoard(width, y, -1)
+        setBoard(width-1, y, -1)
+    for x in range(0,width):
+        setBoard(x, 0, -1)
+        setBoard(x, 1, -1)
+        setBoard(x, height, -1)
+        setBoard(x, height-1, -1)
+       
+
+
+
 # makes sand fall
 # currently water (2) can move right until it hits something, but just one square left
 # things on the far left, so x = 0, move twice as fast as other objects, and it will cause a crash
@@ -27,6 +43,11 @@ def getBoard(x, y):
 # doesn't crash anymore.... why? it does pile up on the other side of the screen though, i get why this is happening
 # at (0, y) it checks (1, y-1) and (-1, y-1), (-1, y-1) happens to be the same as (500, y-1-1), so it can move to that space
 # works the other way too, (500, y), (499, y-1), (501, y-1) = (0, y)
+# why not put a border, (0, 0-y), (0-500, y), (500, y-0), and (500-0, 0), it will never have to check the end spaces and won't run into this issue
+# i was thinking a border would make it look nicer anyway, especially seing as anything at y = 0 isn't really visible
+# the right bias would still exist
+# one problem at a time, fix the teleporting objects
+# border fixes the piling on the other side of the screen issue
 def runSimulation():
     direction = 1
     swaps = 0
@@ -103,6 +124,8 @@ def drawBoard():
                 pygame.draw.rect(screen, (0, 0, 0), (x, y, 1, 1)) # color, (x position, y position, width, height) rectangle specs
             elif getBoard(x,y) == 2:
                 pygame.draw.rect(screen, (0, 0, 255), (x, y, 1, 1))
+            elif getBoard(x,y) == -1:
+                pygame.draw.rect(screen, (0, 255, 255), (x, y, 1, 1))
     # Flip the display
     pygame.display.flip()
 
@@ -119,14 +142,15 @@ def playGame():
                 running = False
             elif event.type == pygame.MOUSEBUTTONDOWN: # if mouse input has been pressed down (right, left, middle, all mouse buttons)
                 x, y = event.pos
-                if event.button == 3:
-                    addWater(x,y)
-                else:
-                    addSand(x,y)
+                if(getBoard(x,y) == 0): #check that the spot is empty
+                    if event.button == 3:
+                        addWater(x,y)
+                    else:
+                        addSand(x,y)
         # end of event loop
         runSimulation()
         if swap == 1:
-            addSand(250,0)
+            addSand(250,3)
             #addSand(255,0)
             #addSand(220,0)
             #addSand(240,0)
@@ -139,6 +163,7 @@ def playGame():
 #   print(x)
 
 def main():
+    setBoarder()
     playGame()
     # Done! Time to quit.
     pygame.quit()
