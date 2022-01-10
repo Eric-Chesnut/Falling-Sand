@@ -58,7 +58,7 @@ def copyBoard():
     for x in range(len(board)):
         board[x] = tempBoard[x]
 
-
+# water pools to the right with this algorithm
 def runSimTwo():
     direction = 1
     swaps = 0
