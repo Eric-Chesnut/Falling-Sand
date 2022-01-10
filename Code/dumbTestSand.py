@@ -5,6 +5,8 @@ pygame.init()
 height = 500
 width = 500
 board = [0] * (width + width*height + 1) #create array, fills it with 0's from board[0] to board[width + width*height] and a buffer cuz i can
+tempBoard = [0] * (width + width*height + 1)
+
 screen = pygame.display.set_mode([width, height])
 clock = pygame.time.Clock()
 # array is 1d, but represents a 2d array, x = 6 y = 0 is board[6], x=6 y=1 is board[506], and so on
@@ -16,6 +18,12 @@ def setBoard(x, y, val):
 # get value at x, y
 def getBoard(x, y):
     return board[x + y*width]
+
+def setTempBoard(x, y, val):
+    tempBoard[x + y*width] = val
+
+def getTempBoard(x, y):
+    return tempBoard[x + y*width]
 
 # creates a ring of -1 around the array
 def setBoarder():
@@ -30,9 +38,230 @@ def setBoarder():
         setBoard(x, height, -1)
         setBoard(x, height-1, -1)
        
+def setTempBoarder():
+    for y in range(height-1,-1,-1):
+        setTempBoard(0, y, -1)
+        setTempBoard(1, y, -1)
+        setTempBoard(width, y, -1)
+        setTempBoard(width-1, y, -1)
+    for x in range(0,width):
+        setTempBoard(x, 0, -1)
+        setTempBoard(x, 1, -1)
+        setTempBoard(x, height, -1)
+        setTempBoard(x, height-1, -1)
+
+def emptyTempBoard():
+    tempBoard = [0] * (width + width*height + 1)
+    setTempBoarder()
+
+def copyBoard():
+    for x in range(len(board)):
+        board[x] = tempBoard[x]
 
 
-
+def runSimTwo():
+    direction = 1
+    swaps = 0
+    for y in range(height-2,1,-1):
+        for x in range(2,width-2):
+            if getBoard(x,y) == 1: # if it's sand
+                if getBoard(x,y+1) == 0 or getBoard(x,y+1) == 2: # if spot below sand is empty or has watter
+                    if getTempBoard(x, y+1) == 0 or getTempBoard(x, y+1) == 2: # make sure the spot is still empty or water
+                        setTempBoard(x,y,getTempBoard(x,y+1))
+                        setTempBoard(x,y+1,1)
+                    elif getTempBoard(x-direction,y+1) == 0 or getTempBoard(x-direction,y+1) == 2: # spot down to the first side
+                        setTempBoard(x,y,getTempBoard(x-direction,y+1))
+                        setTempBoard(x-direction,y+1,1)
+                        swaps = random.randint(0,1)
+                        if swaps == 0:
+                            direction = 1
+                        else:
+                            direction = -1
+                    elif getTempBoard(x+direction,y+1) == 0 or getTempBoard(x+direction,y+1) == 2: # spot down to the second side
+                        setTempBoard(x,y,getTempBoard(x+direction,y+1))
+                        setTempBoard(x+direction,y+1,1)
+                        swaps = random.randint(0,1)
+                        if swaps == 0:
+                            direction = 1
+                        else:
+                            direction = -1
+                    else:
+                        setTempBoard(x,y,1)
+                elif getBoard(x-direction,y+1) == 0 or getBoard(x-direction,y+1) == 2: # spot down to the first side 
+                    if getTempBoard(x-direction,y+1) == 0 or getTempBoard(x-direction,y+1) == 2: # still empty/water?
+                        setTempBoard(x,y,getTempBoard(x-direction,y+1))
+                        setTempBoard(x-direction,y+1,1)
+                        swaps = random.randint(0,1)
+                        if swaps == 0:
+                            direction = 1
+                        else:
+                            direction = -1
+                    elif getTempBoard(x, y+1) == 0 or getTempBoard(x, y+1) == 2: # check if center is water/empty now
+                        setTempBoard(x,y,getTempBoard(x,y+1))
+                        setTempBoard(x,y+1,1)
+                        swaps = random.randint(0,1)
+                        if swaps == 0:
+                            direction = 1
+                        else:
+                            direction = -1
+                    elif getTempBoard(x+direction,y+1) == 0 or getTempBoard(x+direction,y+1) == 2: # spot down to the second side
+                        setTempBoard(x,y,getTempBoard(x+direction,y+1))
+                        setTempBoard(x+direction,y+1,1)
+                        swaps = random.randint(0,1)
+                        if swaps == 0:
+                            direction = 1
+                        else:
+                            direction = -1
+                    else:
+                        setTempBoard(x,y,1)
+                elif getBoard(x+direction,y+1) == 0 or getBoard(x+direction,y+1) == 2: # spot down to the second side
+                    if getTempBoard(x+direction,y+1) == 0 or getTempBoard(x+direction,y+1) == 2: # still empty/water?
+                        setTempBoard(x,y,getTempBoard(x+direction,y+1))
+                        setTempBoard(x+direction,y+1,1)
+                        swaps = random.randint(0,1)
+                        if swaps == 0:
+                            direction = 1
+                        else:
+                            direction = -1
+                    elif getTempBoard(x, y+1) == 0 or getTempBoard(x, y+1) == 2: # check if center is water/empty now
+                        setTempBoard(x,y,getTempBoard(x,y+1))
+                        setTempBoard(x,y+1,1)
+                        swaps = random.randint(0,1)
+                        if swaps == 0:
+                            direction = 1
+                        else:
+                            direction = -1
+                    elif getTempBoard(x-direction,y+1) == 0 or getTempBoard(x-direction,y+1) == 2: # spot down to the second side
+                        setTempBoard(x,y,getTempBoard(x-direction,y+1))
+                        setTempBoard(x-direction,y+1,1)
+                        swaps = random.randint(0,1)
+                        if swaps == 0:
+                            direction = 1
+                        else:
+                            direction = -1
+                    else:
+                        setTempBoard(x,y,1)
+                else:
+                    setTempBoard(x,y,1) # sand not moving
+            elif getBoard(x,y) == 2: # if it's water
+                if getBoard(x,y+1) == 0: # if spot below water is empty 
+                    if getTempBoard(x, y+1) == 0: # make sure the spot is still empty
+                        setTempBoard(x,y,getTempBoard(x,y+1))
+                        setTempBoard(x,y+1,2)
+                    elif getTempBoard(x-direction,y+1) == 0: # spot down to the first side
+                        setTempBoard(x,y,getTempBoard(x-direction,y+1))
+                        setTempBoard(x-direction,y+1,2)
+                        swaps = random.randint(0,1)
+                        if swaps == 0:
+                            direction = 1
+                        else:
+                            direction = -1
+                    elif getTempBoard(x+direction,y+1) == 0: # spot down to the second side
+                        setTempBoard(x,y,getTempBoard(x+direction,y+1))
+                        setTempBoard(x+direction,y+1,2)
+                        swaps = random.randint(0,1)
+                        if swaps == 0:
+                            direction = 1
+                        else:
+                            direction = -1
+                    else:
+                        setTempBoard(x,y,2)
+                elif getBoard(x-direction,y+1) == 0: # spot down to the first side 
+                    if getTempBoard(x-direction,y+1) == 0: # still empty?
+                        setTempBoard(x,y,getTempBoard(x-direction,y+1))
+                        setTempBoard(x-direction,y+1,2)
+                        swaps = random.randint(0,1)
+                        if swaps == 0:
+                            direction = 1
+                        else:
+                            direction = -1
+                    elif getTempBoard(x, y+1) == 0: # check if center is empty now
+                        setTempBoard(x,y,getTempBoard(x,y+1))
+                        setTempBoard(x,y+1,2)
+                        swaps = random.randint(0,1)
+                        if swaps == 0:
+                            direction = 1
+                        else:
+                            direction = -1
+                    elif getTempBoard(x+direction,y+1) == 0: # spot down to the second side
+                        setTempBoard(x,y,getTempBoard(x+direction,y+1))
+                        setTempBoard(x+direction,y+1,2)
+                        swaps = random.randint(0,1)
+                        if swaps == 0:
+                            direction = 1
+                        else:
+                            direction = -1
+                    else:
+                        setTempBoard(x,y,2)
+                elif getBoard(x+direction,y+1) == 0: # spot down to the second side
+                    if getTempBoard(x+direction,y+1) == 0: # still empty?
+                        setTempBoard(x,y,getTempBoard(x+direction,y+1))
+                        setTempBoard(x+direction,y+1,2)
+                        swaps = random.randint(0,1)
+                        if swaps == 0:
+                            direction = 1
+                        else:
+                            direction = -1
+                    elif getTempBoard(x, y+1) == 0: # check if center is empty now
+                        setTempBoard(x,y,getTempBoard(x,y+1))
+                        setTempBoard(x,y+1,2)
+                        swaps = random.randint(0,1)
+                        if swaps == 0:
+                            direction = 1
+                        else:
+                            direction = -1
+                    elif getTempBoard(x-direction,y+1) == 0: # spot down to the second side
+                        setTempBoard(x,y,getTempBoard(x-direction,y+1))
+                        setTempBoard(x-direction,y+1,2)
+                        swaps = random.randint(0,1)
+                        if swaps == 0:
+                            direction = 1
+                        else:
+                            direction = -1
+                    else:
+                        setTempBoard(x,y,2)
+                elif getBoard(x+direction,y) == 0: # spot next to it is empty
+                    if getTempBoard(x+direction,y) == 0: # still empty?
+                        setTempBoard(x,y,getTempBoard(x+direction,y))
+                        setTempBoard(x+direction,y,2)
+                        swaps = random.randint(0,1)
+                        if swaps == 0:
+                            direction = 1
+                        else:
+                            direction = -1
+                    elif getTempBoard(x-direction,y) == 0: # spot down to the second side
+                        setTempBoard(x,y,getTempBoard(x-direction,y))
+                        setTempBoard(x-direction,y,2)
+                        swaps = random.randint(0,1)
+                        if swaps == 0:
+                            direction = 1
+                        else:
+                            direction = -1
+                    else:
+                        setTempBoard(x,y,2)
+                elif getBoard(x-direction,y) == 0: # other side is empty
+                    if getTempBoard(x-direction,y) == 0: # still empty?
+                        setTempBoard(x,y,getTempBoard(x-direction,y))
+                        setTempBoard(x-direction,y,2)
+                        swaps = random.randint(0,1)
+                        if swaps == 0:
+                            direction = 1
+                        else:
+                            direction = -1
+                    elif getTempBoard(x+direction,y) == 0: # spot down to the second side
+                        setTempBoard(x,y,getTempBoard(x+direction,y))
+                        setTempBoard(x+direction,y,2)
+                        swaps = random.randint(0,1)
+                        if swaps == 0:
+                            direction = 1
+                        else:
+                            direction = -1
+                    else:
+                        setTempBoard(x,y,2)
+                else:
+                    setTempBoard(x,y,2) # water didn't move
+    copyBoard()
+    emptyTempBoard()
 # makes sand fall
 # currently water (2) can move right until it hits something, but just one square left
 # things on the far left, so x = 0, move twice as fast as other objects, and it will cause a crash
@@ -119,8 +348,8 @@ def addWater(x,y):
     
 def drawBoard():
     screen.fill((255, 255, 255)) # Fill the screen with white
-    for y in range(0,height+1):
-        for x in range(0,width+1):
+    for y in range(0,height):
+        for x in range(0,width):
             if getBoard(x,y) == 1: #sand
                 pygame.draw.rect(screen, (194, 178, 128), (x, y, 1, 1)) # color, (x position, y position, width, height) rectangle specs
             elif getBoard(x,y) == 2: #water
@@ -149,7 +378,8 @@ def playGame():
                     else:
                         addSand(x,y)
         # end of event loop
-        runSimulation()
+        runSimTwo()
+        
         if swap == 1:
             addSand(250,3)
             #addSand(255,0)
@@ -165,6 +395,8 @@ def playGame():
 
 def main():
     setBoarder()
+    emptyTempBoard()
+    #print (tempBoard[0])
     playGame()
     # Done! Time to quit.
     pygame.quit()
