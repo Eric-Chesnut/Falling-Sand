@@ -229,28 +229,12 @@ def runSimTwo():
                             direction = 1
                         else:
                             direction = -1
-                    elif getTempBoard(x-direction,y) == 0: # spot down to the second side
-                        setTempBoard(x,y,getTempBoard(x-direction,y))
-                        setTempBoard(x-direction,y,2)
-                        swaps = random.randint(0,1)
-                        if swaps == 0:
-                            direction = 1
-                        else:
-                            direction = -1
                     else:
                         setTempBoard(x,y,2)
                 elif getBoard(x-direction,y) == 0: # other side is empty
                     if getTempBoard(x-direction,y) == 0: # still empty?
                         setTempBoard(x,y,getTempBoard(x-direction,y))
                         setTempBoard(x-direction,y,2)
-                        swaps = random.randint(0,1)
-                        if swaps == 0:
-                            direction = 1
-                        else:
-                            direction = -1
-                    elif getTempBoard(x+direction,y) == 0: # spot down to the second side
-                        setTempBoard(x,y,getTempBoard(x+direction,y))
-                        setTempBoard(x+direction,y,2)
                         swaps = random.randint(0,1)
                         if swaps == 0:
                             direction = 1
