@@ -58,6 +58,83 @@ def copyBoard():
     for x in range(len(board)):
         board[x] = tempBoard[x]
 
+#run sand simulation algorithm 
+def sandSim(x, y):
+    swaps = random.randint(0,1)
+    if swaps == 0:
+        direction = 1
+    else:
+        direction = -1
+    if getBoard(x,y+1) == 0 or getBoard(x,y+1) == 2: # if spot below sand is empty or has watter
+        if getTempBoard(x, y+1) == 0 or getTempBoard(x, y+1) == 2: # make sure the spot is still empty or water
+            setTempBoard(x,y,getTempBoard(x,y+1))
+            setTempBoard(x,y+1,1)         
+        else:
+            setTempBoard(x,y,1) # sand won't move if spot isn't empty anymore
+    elif getBoard(x-direction,y+1) == 0 or getBoard(x-direction,y+1) == 2: # spot down to the first side 
+        if getTempBoard(x-direction,y+1) == 0 or getTempBoard(x-direction,y+1) == 2: # still empty/water?
+            setTempBoard(x,y,getTempBoard(x-direction,y+1))
+            setTempBoard(x-direction,y+1,1)
+        else:
+            setTempBoard(x,y,1) # no movement
+    elif getBoard(x+direction,y+1) == 0 or getBoard(x+direction,y+1) == 2: # spot down to the second side
+        if getTempBoard(x+direction,y+1) == 0 or getTempBoard(x+direction,y+1) == 2: # still empty/water?
+            setTempBoard(x,y,getTempBoard(x+direction,y+1))
+            setTempBoard(x+direction,y+1,1)
+        else:
+            setTempBoard(x,y,1) #no move
+    else:
+        setTempBoard(x,y,1) # sand not moving
+
+# not a great algorithm, hard for water to flow down onto other water, fill up holes
+def waterSim(x, y):  
+    swaps = random.randint(0,1)
+    if swaps == 0:
+        direction = 1
+    else:
+        direction = -1
+    if getBoard(x,y+1) == 0: # if spot below water is empty 
+        if getTempBoard(x, y+1) == 0: # make sure the spot is still empty
+            setTempBoard(x,y,getTempBoard(x,y+1))
+            setTempBoard(x,y+1,2)
+        else:
+            setTempBoard(x,y,2) # no move
+    elif getBoard(x-direction,y+1) == 0: # spot down to the first side 
+        if getTempBoard(x-direction,y+1) == 0: # still empty?
+            setTempBoard(x,y,getTempBoard(x-direction,y+1))
+            setTempBoard(x-direction,y+1,2)
+        else:
+            setTempBoard(x,y,2) # no move
+    elif getBoard(x+direction,y+1) == 0: # spot down to the second side
+        if getTempBoard(x+direction,y+1) == 0: # still empty?
+            setTempBoard(x,y,getTempBoard(x+direction,y+1))
+            setTempBoard(x+direction,y+1,2)
+        else:
+            setTempBoard(x,y,2) # no move
+    elif getBoard(x+direction,y) == 0: # spot next to it is empty
+        if getTempBoard(x+direction,y) == 0: # still empty?
+            setTempBoard(x,y,getTempBoard(x+direction,y))
+            setTempBoard(x+direction,y,2)
+    elif getBoard(x-direction,y) == 0: # other side is empty
+        if getTempBoard(x-direction,y) == 0: # still empty?
+            setTempBoard(x,y,getTempBoard(x-direction,y))
+            setTempBoard(x-direction,y,2)
+        else:
+            setTempBoard(x,y,2)
+    else:
+        setTempBoard(x,y,2) # water didn't move   
+
+def runSimThree():
+    for y in range(height-2,1,-1):
+        for x in range(2,width-2):
+            if getBoard(x,y) == 1: # if it's sand
+                sandSim(x,y)
+            elif getBoard(x,y) == 2: # if it's water
+                waterSim(x,y)  
+    copyBoard()
+    emptyTempBoard()
+        
+        
 # water pools to the right with this algorithm
 def runSimTwo():
     direction = 1
@@ -362,8 +439,8 @@ def playGame():
                     else:
                         addSand(x,y)
         # end of event loop
-        runSimTwo()
-        
+        #runSimTwo()
+        runSimThree()
         if swap == 1:
             addSand(250,3)
             #addSand(255,0)
