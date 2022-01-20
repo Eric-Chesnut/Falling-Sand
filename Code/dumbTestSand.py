@@ -134,70 +134,48 @@ def waterSim(x, y):
         setTempBoard(x,y,2) # water didn't move   
         redo.append((x,y))
 
+# only check temp board
 def sandSimNoRedo(x, y):
     swaps = random.randint(0,1)
     if swaps == 0:
         direction = 1
     else:
         direction = -1
-    if getBoard(x,y+1) == 0 or getBoard(x,y+1) == 2: # if spot below sand is empty or has watter
-        if getTempBoard(x, y+1) == 0 or getTempBoard(x, y+1) == 2: # make sure the spot is still empty or water
-            setTempBoard(x,y,getTempBoard(x,y+1))
-            setTempBoard(x,y+1,1)         
-        else:
-            setTempBoard(x,y,1) # sand won't move if spot isn't empty anymore
-    elif getBoard(x-direction,y+1) == 0 or getBoard(x-direction,y+1) == 2: # spot down to the first side 
-        if getTempBoard(x-direction,y+1) == 0 or getTempBoard(x-direction,y+1) == 2: # still empty/water?
-            setTempBoard(x,y,getTempBoard(x-direction,y+1))
-            setTempBoard(x-direction,y+1,1)
-        else:
-            setTempBoard(x,y,1) # no movement
-    elif getBoard(x+direction,y+1) == 0 or getBoard(x+direction,y+1) == 2: # spot down to the second side
-        if getTempBoard(x+direction,y+1) == 0 or getTempBoard(x+direction,y+1) == 2: # still empty/water?
-            setTempBoard(x,y,getTempBoard(x+direction,y+1))
-            setTempBoard(x+direction,y+1,1)
-        else:
-            setTempBoard(x,y,1) #no move
-    else:
-        setTempBoard(x,y,1) # sand not moving
+    if getTempBoard(x, y+1) == 0 or getTempBoard(x, y+1) == 2: # make sure the spot is still empty or water
+        setTempBoard(x,y,getTempBoard(x,y+1))
+        setTempBoard(x,y+1,1)         
+    elif getTempBoard(x-direction,y+1) == 0 or getTempBoard(x-direction,y+1) == 2: # still empty/water?
+        setTempBoard(x,y,getTempBoard(x-direction,y+1))
+        setTempBoard(x-direction,y+1,1)
+    elif getTempBoard(x+direction,y+1) == 0 or getTempBoard(x+direction,y+1) == 2: # still empty/water?
+        setTempBoard(x,y,getTempBoard(x+direction,y+1))
+        setTempBoard(x+direction,y+1,1)
+        
+    
 
-# not a great algorithm, hard for water to flow down onto other water, fill up holes when run from bottom of the screen going up row by row
+# only check temp board
 def waterSimNoRedo(x, y):  
     swaps = random.randint(0,1)
     if swaps == 0:
         direction = 1
     else:
         direction = -1
-    if getBoard(x,y+1) == 0: # if spot below water is empty 
-        if getTempBoard(x, y+1) == 0: # make sure the spot is still empty
-            setTempBoard(x,y,getTempBoard(x,y+1))
-            setTempBoard(x,y+1,2)
-        else:
-            setTempBoard(x,y,2) # no move
-    elif getBoard(x-direction,y+1) == 0: # spot down to the first side 
-        if getTempBoard(x-direction,y+1) == 0: # still empty?
-            setTempBoard(x,y,getTempBoard(x-direction,y+1))
-            setTempBoard(x-direction,y+1,2)
-        else:
-            setTempBoard(x,y,2) # no move
-    elif getBoard(x+direction,y+1) == 0: # spot down to the second side
-        if getTempBoard(x+direction,y+1) == 0: # still empty?
-            setTempBoard(x,y,getTempBoard(x+direction,y+1))
-            setTempBoard(x+direction,y+1,2)
-        else:
-            setTempBoard(x,y,2) # no move
-    elif getBoard(x+direction,y) == 0: # spot next to it is empty
-        if getTempBoard(x+direction,y) == 0: # still empty?
-            setTempBoard(x,y,getTempBoard(x+direction,y))
-            setTempBoard(x+direction,y,2)
-    elif getBoard(x-direction,y) == 0: # other side is empty
-        if getTempBoard(x-direction,y) == 0: # still empty?
-            setTempBoard(x,y,getTempBoard(x-direction,y))
-            setTempBoard(x-direction,y,2)
-        else:
-            setTempBoard(x,y,2)
-    else:
-        setTempBoard(x,y,2) # water didn't move   
+    if getTempBoard(x, y+1) == 0: # make sure the spot is still empty
+        setTempBoard(x,y,getTempBoard(x,y+1))
+        setTempBoard(x,y+1,2)
+    elif getTempBoard(x-direction,y+1) == 0: # still empty?
+        setTempBoard(x,y,getTempBoard(x-direction,y+1))
+        setTempBoard(x-direction,y+1,2)
+    elif getTempBoard(x+direction,y+1) == 0: # still empty?
+        setTempBoard(x,y,getTempBoard(x+direction,y+1))
+        setTempBoard(x+direction,y+1,2)   
+    elif getTempBoard(x+direction,y) == 0: # still empty?
+        setTempBoard(x,y,getTempBoard(x+direction,y))
+        setTempBoard(x+direction,y,2)
+    elif getTempBoard(x-direction,y) == 0: # still empty?
+        setTempBoard(x,y,getTempBoard(x-direction,y))
+        setTempBoard(x-direction,y,2)
+   
 
 
 def runRedo():
