@@ -89,7 +89,7 @@ def sandSim(x, y):
             redo.append((x,y))
     else:
         setTempBoard(x,y,1) # sand not moving
-        redo.append((x,y))
+        
 
 # not a great algorithm, hard for water to flow down onto other water, fill up holes when run from bottom of the screen going up row by row
 def waterSim(x, y):  
@@ -132,7 +132,7 @@ def waterSim(x, y):
             redo.append((x,y))
     else:
         setTempBoard(x,y,2) # water didn't move   
-        redo.append((x,y))
+        
 
 # only check temp board
 def sandSimNoRedo(x, y):
